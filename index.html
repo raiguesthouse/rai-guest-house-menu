@@ -1,99 +1,115 @@
-import React, { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rai Guest House Menu</title>
 
-const menuItems = [
-  { name: "Plain Tawa Roti", price: 10 },
-  { name: "Butter Roti", price: 13 },
-  { name: "Jeera Rice", price: 120 },
-  { name: "Shahi Paneer", price: 200 },
-  { name: "Special Thali", price: 200 },
-];
+    <!-- React & Babel CDNs -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-export default function MenuOrder() {
-  const [cart, setCart] = useState([]);
-  const [customerInfo, setCustomerInfo] = useState({ mobile: "", room: "" });
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
+        .menu-item { display: flex; justify-content: space-between; margin: 10px 0; }
+        .cart-item { display: flex; justify-content: space-between; margin: 5px 0; }
+        button { background-color: #007bff; color: white; border: none; padding: 5px 10px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
 
-  const addToCart = (item) => {
-    setCart((prev) => {
-      const existingItem = prev.find((i) => i.name === item.name);
-      if (existingItem) {
-        return prev.map((i) =>
-          i.name === item.name ? { ...i, quantity: i.quantity + 1 } : i
-        );
-      }
-      return [...prev, { ...item, quantity: 1 }];
-    });
-  };
+    <div id="root"></div>
 
-  const updateQuantity = (index, quantity) => {
-    setCart((prev) =>
-      prev.map((item, i) => (i === index ? { ...item, quantity } : item))
-    );
-  };
+    <script type="text/babel">
+        function MenuOrder() {
+            const [cart, setCart] = React.useState([]);
+            const [customerInfo, setCustomerInfo] = React.useState({ mobile: "", room: "" });
 
-  const removeItem = (index) => {
-    setCart((prev) => prev.filter((_, i) => i !== index));
-  };
+            const menuItems = [
+                { name: "Plain Tawa Roti", price: 10 },
+                { name: "Butter Roti", price: 13 },
+                { name: "Jeera Rice", price: 120 },
+                { name: "Shahi Paneer", price: 200 },
+                { name: "Special Thali", price: 250 }
+            ];
 
-  const handleOrder = () => {
-    const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-    const orderDetails = cart
-      .map((item) => `${item.name} x${item.quantity} = ₹${item.price * item.quantity}`)
-      .join("\n");
-    
-    const emailBody = `Room No: ${customerInfo.room}\nMobile: ${customerInfo.mobile}\n\nOrder Details:\n${orderDetails}\n\nTotal: ₹${total}`;
-    window.location.href = `mailto:aakashraiofficialmail@gmail.com?subject=New Order&body=${encodeURIComponent(emailBody)}`;
-  };
+            const addToCart = (item) => {
+                setCart(prev => {
+                    const existingItem = prev.find(i => i.name === item.name);
+                    if (existingItem) {
+                        return prev.map(i => i.name === item.name ? { ...i, quantity: i.quantity + 1 } : i);
+                    }
+                    return [...prev, { ...item, quantity: 1 }];
+                });
+            };
 
-  return (
-    <div className="p-4 max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-4">📜 Rai Guest House Menu</h1>
-      <div className="grid grid-cols-1 gap-4">
-        {menuItems.map((item) => (
-          <Card key={item.name} className="p-4 flex justify-between items-center">
-            <CardContent>{item.name} - ₹{item.price}</CardContent>
-            <Button onClick={() => addToCart(item)}>Add</Button>
-          </Card>
-        ))}
-      </div>
-      <h2 className="text-xl font-bold mt-6">🛒 Your Order</h2>
-      {cart.length === 0 ? (
-        <p>No items added</p>
-      ) : (
-        cart.map((item, index) => (
-          <div key={index} className="flex justify-between items-center p-2 border">
-            <span>{item.name} (₹{item.price})</span>
-            <input
-              type="number"
-              className="w-12 text-center border"
-              value={item.quantity}
-              min={1}
-              onChange={(e) => updateQuantity(index, parseInt(e.target.value) || 1)}
-            />
-            <Button variant="destructive" onClick={() => removeItem(index)}>
-              ❌
-            </Button>
-          </div>
-        ))
-      )}
-      <h2 className="text-lg font-bold mt-4">Total: ₹{cart.reduce((acc, item) => acc + item.price * item.quantity, 0)}</h2>
-      <div className="mt-4">
-        <Input
-          placeholder="Enter Mobile Number"
-          value={customerInfo.mobile}
-          onChange={(e) => setCustomerInfo({ ...customerInfo, mobile: e.target.value })}
-        />
-        <Input
-          placeholder="Enter Room Number"
-          value={customerInfo.room}
-          onChange={(e) => setCustomerInfo({ ...customerInfo, room: e.target.value })}
-        />
-        <Button className="w-full mt-4" onClick={handleOrder} disabled={!customerInfo.mobile || !customerInfo.room || cart.length === 0}>
-          Place Order
-        </Button>
-      </div>
-    </div>
-  );
-}
+            const updateQuantity = (index, quantity) => {
+                setCart(prev => prev.map((item, i) => i === index ? { ...item, quantity: Math.max(1, quantity) } : item));
+            };
+
+            const removeItem = (index) => {
+                setCart(prev => prev.filter((_, i) => i !== index));
+            };
+
+            const handleOrder = () => {
+                const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+                const orderDetails = cart.map(item => `${item.name} ×${item.quantity} = ₹${item.price * item.quantity}`).join("\n");
+                const emailBody = `Room No: ${customerInfo.room}\nMobile: ${customerInfo.mobile}\n\nOrder Details:\n${orderDetails}\n\nTotal: ₹${total}`;
+                window.location.href = `mailto:aakashraiofficialmail@gmail.com?subject=New Order&body=${encodeURIComponent(emailBody)}`;
+            };
+
+            return (
+                <div>
+                    <h2>📜 Rai Guest House Menu</h2>
+                    {menuItems.map((item, index) => (
+                        <div key={index} className="menu-item">
+                            <span>{item.name} - ₹{item.price}</span>
+                            <button onClick={() => addToCart(item)}>Add</button>
+                        </div>
+                    ))}
+
+                    <h2>🛒 Your Order</h2>
+                    {cart.length === 0 ? (
+                        <p>No items added</p>
+                    ) : (
+                        cart.map((item, index) => (
+                            <div key={index} className="cart-item">
+                                <span>{item.name} (₹{item.price})</span>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    value={item.quantity}
+                                    onChange={(e) => updateQuantity(index, parseInt(e.target.value) || 1)}
+                                />
+                                <button onClick={() => removeItem(index)}>Remove</button>
+                            </div>
+                        ))
+                    )}
+
+                    <h3>📌 Customer Details</h3>
+                    <input
+                        type="text"
+                        placeholder="Room No"
+                        value={customerInfo.room}
+                        onChange={(e) => setCustomerInfo({ ...customerInfo, room: e.target.value })}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Mobile No"
+                        value={customerInfo.mobile}
+                        onChange={(e) => setCustomerInfo({ ...customerInfo, mobile: e.target.value })}
+                    />
+
+                    <br /><br />
+                    <button onClick={handleOrder}>📩 Place Order</button>
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(<MenuOrder />);
+    </script>
+
+</body>
+</html>
