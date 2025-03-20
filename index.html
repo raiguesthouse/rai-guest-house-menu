@@ -1,130 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rai Guest House Menu</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: white;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-        }
-        .menu-container {
-            max-width: 600px;
-            margin: auto;
-        }
-        .category {
-            margin-top: 20px;
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #ffcc00;
-        }
-        .item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #444;
-        }
-        .quantity {
-            width: 50px;
-            text-align: center;
-        }
-        button {
-            background-color: #ffcc00;
-            color: black;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-        .cart-container {
-            margin-top: 30px;
-            background: #222;
-            padding: 15px;
-            border-radius: 10px;
-        }
-    </style>
-</head>
-<body>
+import { useState } from "react";
 
-    <h1>Rai Guest House Menu</h1>
-    
-    <div class="menu-container">
-        
-        <div class="category">Roti & Paratha</div>
-        <div class="item">
-            <span>Plain Tawa Roti</span> <span>₹10</span>
-            <input type="number" class="quantity" value="1" min="1">
-            <button onclick="addToCart('Plain Tawa Roti', 10, this)">Add</button>
-        </div>
-        <div class="item">
-            <span>Butter Roti</span> <span>₹13</span>
-            <input type="number" class="quantity" value="1" min="1">
-            <button onclick="addToCart('Butter Roti', 13, this)">Add</button>
-        </div>
-        <div class="item">
-            <span>Paneer Paratha</span> <span>₹80</span>
-            <input type="number" class="quantity" value="1" min="1">
-            <button onclick="addToCart('Paneer Paratha', 80, this)">Add</button>
-        </div>
+export default function Menu() {
+  const [cart, setCart] = useState([]);
 
-        <div class="category">Rice & Biryani</div>
-        <div class="item">
-            <span>Jeera Rice</span> <span>₹120</span>
-            <input type="number" class="quantity" value="1" min="1">
-            <button onclick="addToCart('Jeera Rice', 120, this)">Add</button>
-        </div>
-        <div class="item">
-            <span>Veg Biryani</span> <span>₹160</span>
-            <input type="number" class="quantity" value="1" min="1">
-            <button onclick="addToCart('Veg Biryani', 160, this)">Add</button>
-        </div>
+  const menuItems = [
+    { category: "Roti & Paratha", items: [
+        { name: "Plain Tawa Roti", price: 10 },
+        { name: "Butter Roti", price: 13 },
+        { name: "Paneer Paratha", price: 80 }
+      ]
+    },
+    { category: "Rice & Biryani", items: [
+        { name: "Jeera Rice", price: 120 },
+        { name: "Veg Biryani", price: 160 }
+      ]
+    },
+    { category: "Paneer Dishes", items: [
+        { name: "Shahi Paneer", price: 200 }
+      ]
+    }
+  ];
 
-        <div class="category">Paneer Dishes</div>
-        <div class="item">
-            <span>Shahi Paneer</span> <span>₹200</span>
-            <input type="number" class="quantity" value="1" min="1">
-            <button onclick="addToCart('Shahi Paneer', 200, this)">Add</button>
+  const addToCart = (item) => {
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((cartItem) => cartItem.name === item.name);
+      if (existingItem) {
+        return prevCart.map((cartItem) =>
+          cartItem.name === item.name ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
+        );
+      } else {
+        return [...prevCart, { ...item, quantity: 1 }];
+      }
+    });
+  };
+
+  const updateQuantity = (name, amount) => {
+    setCart((prevCart) =>
+      prevCart
+        .map((item) =>
+          item.name === name ? { ...item, quantity: Math.max(1, item.quantity + amount) } : item
+        )
+        .filter((item) => item.quantity > 0)
+    );
+  };
+
+  const placeOrder = () => {
+    alert("Order placed successfully!");
+    setCart([]);
+  };
+
+  return (
+    <div className="p-4 bg-black text-white min-h-screen">
+      <h1 className="text-3xl font-bold text-center mb-4">Rai Guest House Menu</h1>
+      {menuItems.map((category, index) => (
+        <div key={index} className="mb-4">
+          <h2 className="text-xl font-bold text-yellow-400 mb-2">{category.category}</h2>
+          {category.items.map((item, idx) => (
+            <div key={idx} className="flex justify-between items-center p-2 border-b border-gray-600">
+              <span>{item.name}</span>
+              <span>₹{item.price}</span>
+              <button onClick={() => addToCart(item)} className="bg-yellow-500 px-3 py-1 rounded">Add</button>
+            </div>
+          ))}
         </div>
-        
+      ))}
+
+      <div className="bg-gray-800 p-4 mt-4 rounded">
+        <h2 className="text-xl font-bold mb-2">Cart</h2>
+        {cart.length === 0 ? <p>Cart is empty</p> : (
+          cart.map((item, index) => (
+            <div key={index} className="flex justify-between items-center border-b border-gray-600 py-2">
+              <span>{item.name}</span>
+              <div className="flex items-center">
+                <button onClick={() => updateQuantity(item.name, -1)} className="px-2 bg-gray-600 rounded">-</button>
+                <span className="px-4">{item.quantity}</span>
+                <button onClick={() => updateQuantity(item.name, 1)} className="px-2 bg-gray-600 rounded">+</button>
+              </div>
+              <span>₹{item.price * item.quantity}</span>
+            </div>
+          ))
+        )}
+        {cart.length > 0 && (
+          <>
+            <p className="font-bold mt-2">Total: ₹{cart.reduce((acc, item) => acc + item.price * item.quantity, 0)}</p>
+            <button onClick={placeOrder} className="bg-green-500 px-3 py-1 mt-2 rounded">Place Order</button>
+          </>
+        )}
+      </div>
     </div>
-
-    <div class="cart-container">
-        <h2>Cart</h2>
-        <ul id="cart"></ul>
-        <h3>Total: ₹<span id="total">0</span></h3>
-    </div>
-
-    <script>
-        let cart = [];
-
-        function addToCart(name, price, button) {
-            let quantity = button.previousElementSibling.value;
-            let item = { name, price, quantity: parseInt(quantity) };
-            cart.push(item);
-            updateCart();
-        }
-
-        function updateCart() {
-            let cartList = document.getElementById("cart");
-            let totalAmount = document.getElementById("total");
-            cartList.innerHTML = "";
-            let total = 0;
-
-            cart.forEach(item => {
-                let li = document.createElement("li");
-                li.textContent = `${item.name} x${item.quantity} - ₹${item.price * item.quantity}`;
-                cartList.appendChild(li);
-                total += item.price * item.quantity;
-            });
-
-            totalAmount.textContent = total;
-        }
-    </script>
-
-</body>
-</html>
+  );
+}
