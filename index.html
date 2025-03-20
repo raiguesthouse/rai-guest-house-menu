@@ -10,154 +10,49 @@
             background-color: #121212;
             color: white;
             text-align: center;
-            margin: 0;
-            padding: 0;
-        }
-        .menu-container {
-            width: 90%;
-            max-width: 600px;
-            margin: auto;
-            background-color: #1E1E1E;
             padding: 20px;
-            border-radius: 10px;
         }
-        .menu-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px;
-            border-bottom: 1px solid #444;
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: #222;
         }
-        .cart {
-            margin-top: 20px;
-            padding: 15px;
+        th, td {
+            padding: 12px;
+            border: 1px solid #444;
+        }
+        th {
+            background: #444;
+        }
+        tr:hover {
             background: #333;
-            border-radius: 10px;
-        }
-        button {
-            background-color: #ff9800;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        input {
-            width: 50px;
-            text-align: center;
         }
     </style>
 </head>
 <body>
-    <h2>Rai Guest House Menu</h2>
-    <div class="menu-container" id="menu"></div>
-    <div class="cart">
-        <h3>Your Order</h3>
-        <div id="cart-items"></div>
-        <p>Total: ₹<span id="total">0</span></p>
-        <input type="text" id="mobile" placeholder="Mobile Number">
-        <input type="text" id="room" placeholder="Room Number">
-        <button onclick="placeOrder()">Place Order</button>
-    </div>
-    <script>
-        const menuItems = [
-           const menuItems = [
-    { name: "Plain Tawa Roti", price: 10 },
-    { name: "Butter Roti", price: 13 },
-    { name: "Makka Roti", price: 40 },
-    { name: "Jawar Roti", price: 40 },
-    { name: "Bajra Roti", price: 40 },
-    { name: "Sadi Puri", price: 13 },
-    { name: "Masala Puri", price: 25 },
-    { name: "Namkeen Puri", price: 20 },
-    { name: "Plain Paratha", price: 20 },
-    { name: "Ghee Paratha", price: 30 },
-    { name: "Laccha Paratha", price: 45 },
-    { name: "Aloo Paratha", price: 40 },
-    { name: "Matar Paratha", price: 40 },
-    { name: "Gobhi Paratha", price: 40 },
-    { name: "Maithi Paratha", price: 40 },
-    { name: "Pyaz Paratha", price: 40 },
-    { name: "Mix Paratha", price: 50 },
-    { name: "Paneer Paratha", price: 80 },
-    { name: "Mawa Paratha", price: 120 },
-    { name: "Jeera Rice", price: 120 },
-    { name: "Plain Rice", price: 100 },
-    { name: "Butter Khichdi", price: 150 },
-    { name: "Veg Pulaav", price: 150 },
-    { name: "Paneer Pulaav", price: 180 },
-    { name: "Kashmiri Pulaav", price: 180 },
-    { name: "Veg Biryani", price: 160 },
-    { name: "Shahi Paneer", price: 200 },
-    { name: "Paneer Lababdar", price: 200 },
-    { name: "Kadhai Paneer", price: 200 },
-    { name: "Paneer Tikka Masala", price: 220 },
-    { name: "Paneer Bhurji (Gravy)", price: 240 },
-    { name: "Paneer Bhurji (Dry)", price: 260 },
-    { name: "Kaju Paneer", price: 220 },
-    { name: "Kaju Curry", price: 220 },
-    { name: "Navratan Kofta", price: 220 },
-    { name: "Punjabi Besan Gatte", price: 180 },
-    { name: "Masala Bhindi", price: 150 },
-    { name: "Sev Tamatar", price: 150 },
-    { name: "Doodh Sev", price: 180 },
-    { name: "Kadhi Pakoda", price: 160 },
-    { name: "Gobhi Masala", price: 160 },
-    { name: "Baingan Bharta", price: 180 },
-    { name: "Mix Veg", price: 180 },
-    { name: "Corn Palak", price: 160 },
-    { name: "Maithi Matar", price: 160 },
-    { name: "Sadi Thali", price: 150 },
-    { name: "Special Thali", price: 200 },
-    { name: "Water Bottle", price: 20 },
-    { name: "Tea", price: 20 },
-    { name: "Coffee", price: 25 },
-    { name: "Milk", price: 25 }
-];
 
-        ];
+    <h1>🍽 Rai Guest House Menu 🍽</h1>
 
-        const menuDiv = document.getElementById("menu");
-        const cartDiv = document.getElementById("cart-items");
-        let cart = [];
+    <table>
+        <tr>
+            <th>Dish Name</th>
+            <th>Price</th>
+        </tr>
+        <tr><td>Plain Tawa Roti</td><td>₹10</td></tr>
+        <tr><td>Butter Roti</td><td>₹13</td></tr>
+        <tr><td>Makka Roti</td><td>₹40</td></tr>
+        <tr><td>Jawar Roti</td><td>₹40</td></tr>
+        <tr><td>Bajra Roti</td><td>₹40</td></tr>
+        <tr><td>Paneer Paratha</td><td>₹80</td></tr>
+        <tr><td>Jeera Rice</td><td>₹120</td></tr>
+        <tr><td>Shahi Paneer</td><td>₹200</td></tr>
+        <tr><td>Veg Biryani</td><td>₹160</td></tr>
+        <tr><td>Water Bottle</td><td>₹20</td></tr>
+        <tr><td>Tea</td><td>₹20</td></tr>
+        <tr><td>Coffee</td><td>₹25</td></tr>
+        <tr><td>Milk</td><td>₹25</td></tr>
+    </table>
 
-        menuItems.forEach((item, index) => {
-            const div = document.createElement("div");
-            div.classList.add("menu-item");
-            div.innerHTML = `
-                <span>${item.name} - ₹${item.price}</span>
-                <input type='number' id='qty-${index}' value='1' min='1'>
-                <button onclick='addToCart(${index})'>Add</button>
-            `;
-            menuDiv.appendChild(div);
-        });
-
-        function addToCart(index) {
-            const qty = document.getElementById(`qty-${index}`).value;
-            cart.push({ ...menuItems[index], qty: parseInt(qty) });
-            updateCart();
-        }
-
-        function updateCart() {
-            cartDiv.innerHTML = "";
-            let total = 0;
-            cart.forEach((item, idx) => {
-                total += item.price * item.qty;
-                cartDiv.innerHTML += `<p>${item.name} x ${item.qty} - ₹${item.price * item.qty}</p>`;
-            });
-            document.getElementById("total").innerText = total;
-        }
-
-        function placeOrder() {
-            const mobile = document.getElementById("mobile").value;
-            const room = document.getElementById("room").value;
-            if (!mobile || !room || cart.length === 0) {
-                alert("Please enter mobile number, room number, and add items.");
-                return;
-            }
-            let orderDetails = cart.map(item => `${item.name} x ${item.qty} - ₹${item.price * item.qty}`).join("%0A");
-            let emailBody = `Order from Room ${room} (Mobile: ${mobile}):%0A${orderDetails}%0ATotal: ₹${document.getElementById("total").innerText}`;
-            window.location.href = `mailto:aakashraiofficialmail@gmail.com?subject=New Order&body=${emailBody}`;
-        }
-    </script>
 </body>
 </html>
