@@ -5,87 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rai Guest House Menu</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: white;
-            text-align: center;
-            padding: 20px;
-        }
-        table {
-            width: 90%;
-            margin: 20px auto;
-            border-collapse: collapse;
-            background: #222;
-        }
-        th, td {
-            padding: 12px;
-            border: 1px solid #444;
-        }
-        th {
-            background: #444;
-        }
-        tr:hover {
-            background: #333;
-        }
-        button {
-            padding: 8px 15px;
-            background: #ff9800;
-            border: none;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        button:hover {
-            background: #e68900;
-        }
-        #cart {
-            margin-top: 20px;
-            padding: 10px;
-            background: #222;
-            width: 90%;
-            margin-left: auto;
-            margin-right: auto;
-            text-align: left;
-        }
-        #cart div {
-            padding: 8px;
-            border-bottom: 1px solid #444;
-        }
-        #total {
-            font-size: 18px;
-            font-weight: bold;
-            padding: 10px;
-            text-align: right;
-        }
+        body { font-family: Arial, sans-serif; background-color: #1a1a1a; color: #fff; text-align: center; }
+        .menu-container { width: 90%; max-width: 600px; margin: auto; padding: 20px; background: #333; border-radius: 10px; }
+        h2 { color: #ffcc00; }
+        .category { margin-top: 20px; font-size: 20px; font-weight: bold; color: #ff5733; }
+        .item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #666; }
+        .item button { background: #ffcc00; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px; }
+        .cart-container { margin-top: 20px; padding: 10px; background: #222; border-radius: 10px; }
     </style>
 </head>
 <body>
+    <div class="menu-container">
+        <h2>Rai Guest House Menu</h2>
+        <div class="category">Roti & Paratha</div>
+        <div class="item">Plain Tawa Roti - ₹10 <button onclick="addToCart('Plain Tawa Roti', 10)">Add</button></div>
+        <div class="item">Butter Roti - ₹13 <button onclick="addToCart('Butter Roti', 13)">Add</button></div>
+        <div class="item">Paneer Paratha - ₹80 <button onclick="addToCart('Paneer Paratha', 80)">Add</button></div>
+        
+        <div class="category">Rice Dishes</div>
+        <div class="item">Jeera Rice - ₹120 <button onclick="addToCart('Jeera Rice', 120)">Add</button></div>
+        <div class="item">Veg Biryani - ₹160 <button onclick="addToCart('Veg Biryani', 160)">Add</button></div>
 
-    <h1>🍽 Rai Guest House Menu 🍽</h1>
+        <div class="category">Paneer Specials</div>
+        <div class="item">Shahi Paneer - ₹200 <button onclick="addToCart('Shahi Paneer', 200)">Add</button></div>
 
-    <table>
-        <tr>
-            <th>Dish Name</th>
-            <th>Price</th>
-            <th>Action</th>
-        </tr>
-        <tr><td>Plain Tawa Roti</td><td>₹10</td><td><button onclick="addToCart('Plain Tawa Roti', 10)">Add to Cart</button></td></tr>
-        <tr><td>Butter Roti</td><td>₹13</td><td><button onclick="addToCart('Butter Roti', 13)">Add to Cart</button></td></tr>
-        <tr><td>Paneer Paratha</td><td>₹80</td><td><button onclick="addToCart('Paneer Paratha', 80)">Add to Cart</button></td></tr>
-        <tr><td>Jeera Rice</td><td>₹120</td><td><button onclick="addToCart('Jeera Rice', 120)">Add to Cart</button></td></tr>
-        <tr><td>Shahi Paneer</td><td>₹200</td><td><button onclick="addToCart('Shahi Paneer', 200)">Add to Cart</button></td></tr>
-        <tr><td>Veg Biryani</td><td>₹160</td><td><button onclick="addToCart('Veg Biryani', 160)">Add to Cart</button></td></tr>
-        <tr><td>Water Bottle</td><td>₹20</td><td><button onclick="addToCart('Water Bottle', 20)">Add to Cart</button></td></tr>
-        <tr><td>Tea</td><td>₹20</td><td><button onclick="addToCart('Tea', 20)">Add to Cart</button></td></tr>
-        <tr><td>Coffee</td><td>₹25</td><td><button onclick="addToCart('Coffee', 25)">Add to Cart</button></td></tr>
-        <tr><td>Milk</td><td>₹25</td><td><button onclick="addToCart('Milk', 25)">Add to Cart</button></td></tr>
-    </table>
-
-    <h2>🛒 Your Cart</h2>
-    <div id="cart">
-        <div id="cart-items"></div>
-        <div id="total">Total: ₹0</div>
+        <div class="cart-container">
+            <h3>🛒 Your Order</h3>
+            <ul id="cart-list"></ul>
+            <p>Total: ₹<span id="total-price">0</span></p>
+        </div>
     </div>
 
     <script>
@@ -95,20 +43,18 @@
             updateCart();
         }
         function updateCart() {
-            let cartList = "";
-            let totalPrice = 0;
-            cart.forEach((entry, index) => {
-                cartList += `<div>${entry.item} - ₹${entry.price} <button onclick="removeItem(${index})">❌</button></div>`;
-                totalPrice += entry.price;
+            let cartList = document.getElementById("cart-list");
+            let totalPrice = document.getElementById("total-price");
+            cartList.innerHTML = "";
+            let total = 0;
+            cart.forEach(entry => {
+                let li = document.createElement("li");
+                li.textContent = `${entry.item} - ₹${entry.price}`;
+                cartList.appendChild(li);
+                total += entry.price;
             });
-            document.getElementById("cart-items").innerHTML = cartList;
-            document.getElementById("total").innerText = `Total: ₹${totalPrice}`;
-        }
-        function removeItem(index) {
-            cart.splice(index, 1);
-            updateCart();
+            totalPrice.textContent = total;
         }
     </script>
-
 </body>
 </html>
