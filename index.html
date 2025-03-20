@@ -6,18 +6,20 @@
     <title>Rai Guest House Menu</title>
     <style>
         body {
-            background-color: #121212;
-            color: #fff;
             font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: white;
             text-align: center;
+            margin: 0;
+            padding: 0;
         }
         .menu-container {
+            width: 90%;
             max-width: 600px;
-            margin: 50px auto;
-            background: #222;
+            margin: auto;
+            background-color: #1E1E1E;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(255, 215, 0, 0.5);
         }
         .menu-item {
             display: flex;
@@ -25,42 +27,88 @@
             padding: 10px;
             border-bottom: 1px solid #444;
         }
-        .menu-item button {
-            background-color: gold;
+        .cart {
+            margin-top: 20px;
+            padding: 15px;
+            background: #333;
+            border-radius: 10px;
+        }
+        button {
+            background-color: #ff9800;
+            color: white;
             border: none;
             padding: 5px 10px;
             cursor: pointer;
-            font-weight: bold;
+            border-radius: 5px;
+        }
+        input {
+            width: 50px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div class="menu-container">
-        <h2>📜 Rai Guest House Menu</h2>
-        <div class="menu-item">
-            <span>Plain Tawa Roti</span>
-            <span>₹10</span>
-            <button onclick="addToCart('Plain Tawa Roti', 10)">Add</button>
-        </div>
-        <div class="menu-item">
-            <span>Butter Roti</span>
-            <span>₹13</span>
-            <button onclick="addToCart('Butter Roti', 13)">Add</button>
-        </div>
-        <div class="menu-item">
-            <span>Paneer Paratha</span>
-            <span>₹80</span>
-            <button onclick="addToCart('Paneer Paratha', 80)">Add</button>
-        </div>
-        <div class="menu-item">
-            <span>Special Thali</span>
-            <span>₹200</span>
-            <button onclick="addToCart('Special Thali', 200)">Add</button>
-        </div>
+    <h2>Rai Guest House Menu</h2>
+    <div class="menu-container" id="menu"></div>
+    <div class="cart">
+        <h3>Your Order</h3>
+        <div id="cart-items"></div>
+        <p>Total: ₹<span id="total">0</span></p>
+        <input type="text" id="mobile" placeholder="Mobile Number">
+        <input type="text" id="room" placeholder="Room Number">
+        <button onclick="placeOrder()">Place Order</button>
     </div>
     <script>
-        function addToCart(item, price) {
-            alert(item + ' added to cart!');
+        const menuItems = [
+            { name: "Plain Tawa Roti", price: 10 },
+            { name: "Butter Roti", price: 13 },
+            { name: "Paneer Paratha", price: 80 },
+            { name: "Jeera Rice", price: 120 },
+            { name: "Shahi Paneer", price: 200 },
+            { name: "Veg Biryani", price: 160 },
+        ];
+
+        const menuDiv = document.getElementById("menu");
+        const cartDiv = document.getElementById("cart-items");
+        let cart = [];
+
+        menuItems.forEach((item, index) => {
+            const div = document.createElement("div");
+            div.classList.add("menu-item");
+            div.innerHTML = `
+                <span>${item.name} - ₹${item.price}</span>
+                <input type='number' id='qty-${index}' value='1' min='1'>
+                <button onclick='addToCart(${index})'>Add</button>
+            `;
+            menuDiv.appendChild(div);
+        });
+
+        function addToCart(index) {
+            const qty = document.getElementById(`qty-${index}`).value;
+            cart.push({ ...menuItems[index], qty: parseInt(qty) });
+            updateCart();
+        }
+
+        function updateCart() {
+            cartDiv.innerHTML = "";
+            let total = 0;
+            cart.forEach((item, idx) => {
+                total += item.price * item.qty;
+                cartDiv.innerHTML += `<p>${item.name} x ${item.qty} - ₹${item.price * item.qty}</p>`;
+            });
+            document.getElementById("total").innerText = total;
+        }
+
+        function placeOrder() {
+            const mobile = document.getElementById("mobile").value;
+            const room = document.getElementById("room").value;
+            if (!mobile || !room || cart.length === 0) {
+                alert("Please enter mobile number, room number, and add items.");
+                return;
+            }
+            let orderDetails = cart.map(item => `${item.name} x ${item.qty} - ₹${item.price * item.qty}`).join("%0A");
+            let emailBody = `Order from Room ${room} (Mobile: ${mobile}):%0A${orderDetails}%0ATotal: ₹${document.getElementById("total").innerText}`;
+            window.location.href = `mailto:aakashraiofficialmail@gmail.com?subject=New Order&body=${emailBody}`;
         }
     </script>
 </body>
